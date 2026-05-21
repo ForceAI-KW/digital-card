@@ -25,6 +25,10 @@ const config: Config = {
         'wider-12': '0.12em',
         'wider-15': '0.15em',
       },
+      fontFamily: {
+        sans:  ['var(--font-sans)',  'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'serif'],
+      },
     },
   },
   plugins: [],
