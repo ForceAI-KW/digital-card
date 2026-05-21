@@ -18,14 +18,14 @@ type Props      = LinkProps | BtnProps;
 
 const STYLES: Record<Template, Record<Variant, string>> = {
   lux: {
-    primary:   'h-14 bg-ink text-white font-semibold uppercase tracking-wider-12 text-[14px]',
-    secondary: 'h-14 bg-[rgba(104,106,108,0.02)] border border-ink text-ink font-medium text-[14px]',
-    small:     'h-12 bg-[rgba(104,106,108,0.02)] border border-ink text-ink font-medium uppercase tracking-[0.08em] text-[13px]',
+    primary:   'h-14 bg-ink text-white font-semibold hover:font-bold uppercase tracking-wider-12 text-[14px]',
+    secondary: 'h-14 bg-[rgba(104,106,108,0.02)] border border-ink text-ink font-medium hover:font-semibold text-[14px]',
+    small:     'h-12 bg-[rgba(104,106,108,0.02)] border border-ink text-ink font-medium hover:font-semibold uppercase tracking-[0.08em] text-[13px]',
   },
   force: {
-    primary:   'h-14 bg-orange text-wine font-bold uppercase tracking-wider-12 text-[14px] hover:bg-orange-hover',
-    secondary: 'h-14 bg-transparent border border-orange text-cream font-medium text-[14px] hover:bg-wine-elev/60',
-    small:     'h-12 bg-transparent border border-cream/30 text-cream font-medium uppercase tracking-[0.08em] text-[13px]',
+    primary:   'h-14 bg-orange text-wine font-bold hover:font-black uppercase tracking-wider-12 text-[14px] hover:bg-orange-hover',
+    secondary: 'h-14 bg-transparent border border-orange text-cream font-medium hover:font-semibold text-[14px] hover:bg-wine-elev/60',
+    small:     'h-12 bg-transparent border border-cream/30 text-cream font-medium hover:font-semibold uppercase tracking-[0.08em] text-[13px]',
   },
 };
 

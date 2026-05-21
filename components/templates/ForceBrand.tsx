@@ -1,23 +1,23 @@
 'use client';
-import Image from 'next/image';
 import type { Card } from '@/data/cards/_types';
 import { ActionButton } from '@/components/ActionButton';
+import { Photo } from '@/components/Photo';
 import { SocialIconRow } from '@/components/SocialIconRow';
 import { LocaleToggle } from '@/components/LocaleToggle';
 import { ShareButton } from '@/components/ShareButton';
 import { QRModal } from '@/components/QRModal';
 import { FalconF } from '@/components/FalconF';
 import { PhoneIcon, WhatsAppIcon, MailIcon, SMSIcon, DownloadIcon } from '@/components/icons';
-import { t } from '@/lib/i18n';
+import { t, type StringKey } from '@/lib/i18n';
 import { useLocale } from '@/lib/locale-context';
 
 const ORANGE = '#FF7700';
 const CREAM  = '#ECECEC';
 const WINE   = '#2D1418';
 
-const BRAND_LABEL = {
-  'force-ai':    { wordmark: 'FORCE AI',    footerOrg: 'Force AI · Kuwait' },
-  'force-media': { wordmark: 'FORCE MEDIA', footerOrg: 'Force Media · Kuwait' },
+const BRAND_LABEL: Record<string, { wordmark: string; footerOrg: string; byKey: StringKey }> = {
+  'force-ai':    { wordmark: 'FORCE AI',    footerOrg: 'Force AI · Kuwait',    byKey: 'BY_FORCE_AI' },
+  'force-media': { wordmark: 'FORCE MEDIA', footerOrg: 'Force Media · Kuwait', byKey: 'BY_FORCE_MEDIA' },
 };
 
 type Props = { card: Card; url: string };
@@ -32,7 +32,7 @@ export function ForceBrand({ card, url }: Props) {
   const email = card.contact.emails[0] ?? '';
 
   return (
-    <div className="bg-wine min-h-screen">
+    <div className="bg-wine min-h-screen" style={{ animation: 'card-fade-in 320ms ease-out' }}>
       <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] h-16 bg-wine flex justify-end items-center px-4 z-50">
         <LocaleToggle activeColor={CREAM} inactiveColor="rgba(236,236,236,0.5)" />
       </header>
@@ -45,15 +45,8 @@ export function ForceBrand({ card, url }: Props) {
           </span>
         </div>
 
-        <div className="relative w-24 h-24 mb-6 rounded-[12px] overflow-hidden" style={{ border: `2px solid ${ORANGE}` }}>
-          <Image
-            src={card.photo}
-            alt={c.name}
-            width={96}
-            height={96}
-            className="w-full h-full object-cover"
-            priority
-          />
+        <div className="relative w-24 h-24 mb-6 rounded-[12px] overflow-hidden flex items-center justify-center" style={{ border: `2px solid ${ORANGE}` }}>
+          <Photo src={card.photo} alt={c.name} size={96} rounded="rounded" />
         </div>
 
         <h1 className="font-sans font-bold text-[36px] leading-[1.05] tracking-[-0.01em] mb-2 text-center" style={{ color: CREAM }}>
@@ -112,8 +105,9 @@ export function ForceBrand({ card, url }: Props) {
           <QRModal url={url} template="force" label={t('QR_CODE', locale)} />
         </div>
 
-        <footer className="text-[11px] text-center" style={{ color: 'rgba(236,236,236,0.6)' }}>
-          © {card.copyrightYear} {brand.footerOrg}
+        <footer className="flex flex-col items-center gap-1 text-[11px] text-center" style={{ color: 'rgba(236,236,236,0.6)' }}>
+          <span>© {card.copyrightYear} {brand.footerOrg}</span>
+          <span className="text-[10px] font-medium uppercase tracking-wider-15">{t(brand.byKey, locale)}</span>
         </footer>
       </main>
     </div>

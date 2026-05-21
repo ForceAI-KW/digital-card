@@ -1,7 +1,7 @@
 'use client';
-import Image from 'next/image';
 import type { Card } from '@/data/cards/_types';
 import { ActionButton } from '@/components/ActionButton';
+import { Photo } from '@/components/Photo';
 import { SocialIconRow } from '@/components/SocialIconRow';
 import { LocaleToggle } from '@/components/LocaleToggle';
 import { ShareButton } from '@/components/ShareButton';
@@ -22,7 +22,7 @@ export function NardoLux({ card, url }: Props) {
   const email = card.contact.emails[0] ?? '';
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen" style={{ animation: 'card-fade-in 320ms ease-out' }}>
       {/* Fixed top bar */}
       <header
         className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] h-16 bg-white border-b flex justify-between items-center px-4 z-50"
@@ -41,17 +41,10 @@ export function NardoLux({ card, url }: Props) {
       <main className="max-w-[420px] mx-auto px-4 pt-32 pb-16 flex flex-col items-center">
         {/* Hero avatar — Nardo circle bg (6% opacity) + 1.5px solid Nardo border */}
         <div
-          className="relative w-24 h-24 mb-6 rounded-full overflow-hidden"
+          className="relative w-24 h-24 mb-6 rounded-full overflow-hidden flex items-center justify-center"
           style={{ backgroundColor: 'rgba(104,106,108,0.06)', border: `1.5px solid ${NARDO}` }}
         >
-          <Image
-            src={card.photo}
-            alt={c.name}
-            width={96}
-            height={96}
-            className="w-full h-full object-cover"
-            priority
-          />
+          <Photo src={card.photo} alt={c.name} size={96} rounded="full" />
         </div>
 
         {/* Name — serif italic large */}
