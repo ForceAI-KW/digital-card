@@ -23,7 +23,8 @@ test('login: correct password sets cookie and reaches /admin', async ({ page }) 
   await page.waitForLoadState('domcontentloaded');
   await page.fill('input[name=password]', pw!);
   await page.click('button[type=submit]');
-  await expect(page).toHaveURL(/\/admin\b/, { timeout: 20_000 });
+  // Must navigate to /admin exactly (not /admin/login — which also matches /admin)
+  await expect(page).toHaveURL(/\/admin$/, { timeout: 20_000 });
   // The admin page loads cards from Neon — wait for the heading directly
   await expect(page.getByRole('heading', { name: 'Cards' })).toBeVisible({ timeout: 30_000 });
 });
