@@ -7,8 +7,12 @@ async function signIn(page: import('@playwright/test').Page) {
   if (!PW) throw new Error('PLAYWRIGHT_ADMIN_PASSWORD env required');
   await page.goto('/admin/login');
   await page.fill('input[name=password]', PW);
-  await page.click('button[type=submit]');
-  await page.waitForURL(/\/admin\b/);
+  await Promise.all([
+    page.waitForURL(/\/admin\b/, { timeout: 15_000 }),
+    page.click('button[type=submit]'),
+  ]);
+  // Wait for admin page to fully load (it queries Neon for card list)
+  await page.waitForLoadState('networkidle', { timeout: 20_000 });
 }
 
 test('CRUD: create → edit → delete', async ({ page }) => {
@@ -18,6 +22,7 @@ test('CRUD: create → edit → delete', async ({ page }) => {
 
   // create
   await page.goto('/admin/cards/new');
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
   await page.fill('input[name=slug]', 'qa-test');
   await page.fill('input[name=enName]', 'QA Test');
   await page.fill('input[name=enTitle]', 'Tester');
@@ -33,20 +38,29 @@ test('CRUD: create → edit → delete', async ({ page }) => {
     PHOTO
   );
   await page.fill('input[name=emails]', 'qa@example.com');
-  await page.click('button[type=submit]');
-  await expect(page).toHaveURL(/\/admin(\?status=created)?$/);
-  await expect(page.getByText('QA Test')).toBeVisible();
+  await Promise.all([
+    page.waitForURL(/\/admin(\?status=created)?$/, { timeout: 20_000 }),
+    page.click('button[type=submit]'),
+  ]);
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
+  await expect(page.getByText('QA Test')).toBeVisible({ timeout: 10_000 });
 
   // edit
   await page.getByRole('row', { name: /qa-test/i }).getByRole('link', { name: 'Edit' }).click();
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
   await page.fill('input[name=enTitle]', 'Senior Tester');
-  await page.click('button[type=submit]');
-  await expect(page).toHaveURL(/\/admin(\?status=saved)?$/);
+  await Promise.all([
+    page.waitForURL(/\/admin(\?status=saved)?$/, { timeout: 20_000 }),
+    page.click('button[type=submit]'),
+  ]);
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
 
   // delete
   await page.getByRole('row', { name: /qa-test/i }).getByRole('link', { name: 'Edit' }).click();
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
   await page.click('text=Delete');
   await page.click('text=Confirm delete');
-  await expect(page).toHaveURL(/\/admin(\?status=deleted)?$/);
+  await page.waitForURL(/\/admin(\?status=deleted)?$/, { timeout: 20_000 });
+  await page.waitForLoadState('networkidle', { timeout: 15_000 });
   await expect(page.getByText('qa-test')).not.toBeVisible();
 });
