@@ -12,7 +12,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      # npm ci rejects cross-platform lockfiles: macOS lockfile omits linux-x64 optional
+      # packages (@emnapi/runtime, @emnapi/core) required by rolldown/unrs on the runner.
+      # npm install tolerates platform divergence while still respecting lockfile versions.
+      # prisma.config.ts now falls back to a dummy URL so postinstall succeeds in CI.
+      - run: npm install
       - name: Zero-vuln audit gate (rule 10)
         run: npm audit
       - name: Rule 13 — Preview DATABASE_URL ≠ Production

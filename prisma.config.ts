@@ -11,6 +11,7 @@ export default defineConfig({
   datasource: {
     // DIRECT_URL is used here so Prisma Migrate uses the non-pooled connection.
     // At runtime, PrismaClient receives DATABASE_URL (pooled) via the adapter in lib/prisma.ts.
-    url: env('DIRECT_URL'),
+    // Fallback keeps `prisma generate --no-engine` working in CI where no real DB is needed.
+    url: process.env.DIRECT_URL ?? 'postgresql://ci:ci@localhost/ci',
   },
 });
