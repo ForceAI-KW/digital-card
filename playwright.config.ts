@@ -25,6 +25,8 @@ export default defineConfig({
     // Give server actions and Neon queries room to breathe in CI
     actionTimeout: 30_000,
     navigationTimeout: 60_000,
+    screenshot: 'only-on-failure',
+    trace: 'on-first-retry',
   },
   timeout: 90_000,
 });
