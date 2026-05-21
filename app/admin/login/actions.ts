@@ -22,9 +22,11 @@ export async function loginAction(_prev: State, fd: FormData): Promise<State> {
   if (!ok) return { error: 'Invalid password.' };
 
   const token = await signSession();
-  // Use secure cookies only when the site URL is HTTPS (not for local http:// e2e testing)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
-  const secure = process.env.NODE_ENV === 'production' && !siteUrl.startsWith('http://');
+  // Use secure cookies only when running on HTTPS.
+  // NEXT_PUBLIC_SITE_URL is inlined at build time and unavailable at runtime in server actions.
+  // Use SITE_URL (server-only, set to https://... in prod, http://localhost:3001 in e2e).
+  const siteUrl = process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const secure = process.env.NODE_ENV === 'production' && siteUrl.startsWith('https://');
   (await cookies()).set('admin_session', token, {
     httpOnly: true,
     secure,

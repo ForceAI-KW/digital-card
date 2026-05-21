@@ -18,6 +18,8 @@ export default defineConfig({
       ADMIN_JWT_SECRET: process.env.ADMIN_JWT_SECRET ?? '',
       BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN ?? '',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3001',
+      // Server-only var for cookie security check (NEXT_PUBLIC_ vars are inlined at build time)
+      SITE_URL: 'http://localhost:3001',
     },
   },
   use: {
