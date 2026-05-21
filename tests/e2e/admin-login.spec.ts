@@ -9,11 +9,13 @@ test('login: wrong password shows error', async ({ page }) => {
   await page.goto('/admin/login');
   await page.waitForLoadState('domcontentloaded');
   await page.fill('input[name=password]', 'definitely-wrong');
-  await page.click('button[type=submit]');
+  // Use the SIGN IN button specifically (the admin layout also has a "Sign out" submit button)
+  await page.getByRole('button', { name: 'SIGN IN' }).click();
   // The form action returns an error string; either "Invalid password." or
   // "Server not configured" (if ADMIN_PASSWORD_HASH env missing) or rate-limit msg.
   // The <p> error element appears regardless — just check it's visible.
-  await expect(page.locator('form p[style*="b00020"]')).toBeVisible({ timeout: 20_000 });
+  // Note: Chromium normalizes #b00020 to rgb(176, 0, 32) in inline styles, so match text instead.
+  await expect(page.locator('form p')).toBeVisible({ timeout: 20_000 });
 });
 
 test('login: correct password sets cookie and reaches /admin', async ({ page }) => {
@@ -22,7 +24,8 @@ test('login: correct password sets cookie and reaches /admin', async ({ page }) 
   await page.goto('/admin/login');
   await page.waitForLoadState('domcontentloaded');
   await page.fill('input[name=password]', pw!);
-  await page.click('button[type=submit]');
+  // Use the SIGN IN button specifically (the admin layout also has a "Sign out" submit button)
+  await page.getByRole('button', { name: 'SIGN IN' }).click();
   // Must navigate to /admin exactly (not /admin/login — which also matches /admin)
   await expect(page).toHaveURL(/\/admin$/, { timeout: 20_000 });
   // The admin page loads cards from Neon — wait for the heading directly

@@ -8,7 +8,8 @@ async function signIn(page: import('@playwright/test').Page) {
   await page.goto('/admin/login');
   await page.waitForLoadState('domcontentloaded');
   await page.fill('input[name=password]', PW);
-  await page.click('button[type=submit]');
+  // Use the SIGN IN button specifically (the admin layout also has a "Sign out" submit button)
+  await page.getByRole('button', { name: 'SIGN IN' }).click();
   // Wait for redirect to /admin and heading to appear
   await expect(page.getByRole('heading', { name: 'Cards' })).toBeVisible({ timeout: 30_000 });
 }
@@ -36,7 +37,8 @@ test('CRUD: create → edit → delete', async ({ page }) => {
     PHOTO
   );
   await page.fill('input[name=emails]', 'qa@example.com');
-  await page.click('button[type=submit]');
+  // Use the specific submit button name (layout also has a "Sign out" submit button)
+  await page.getByRole('button', { name: 'CREATE' }).click();
   await expect(page).toHaveURL(/\/admin(\?status=created)?$/, { timeout: 30_000 });
   await expect(page.getByText('QA Test')).toBeVisible({ timeout: 15_000 });
 
@@ -44,7 +46,8 @@ test('CRUD: create → edit → delete', async ({ page }) => {
   await page.getByRole('row', { name: /qa-test/i }).getByRole('link', { name: 'Edit' }).click();
   await expect(page.locator('input[name=enTitle]')).toBeVisible({ timeout: 20_000 });
   await page.fill('input[name=enTitle]', 'Senior Tester');
-  await page.click('button[type=submit]');
+  // Use the specific submit button name (layout also has a "Sign out" submit button)
+  await page.getByRole('button', { name: 'SAVE' }).click();
   await expect(page).toHaveURL(/\/admin(\?status=saved)?$/, { timeout: 30_000 });
 
   // delete
