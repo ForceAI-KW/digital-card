@@ -37,14 +37,22 @@ function foldLine(line: string): string {
   return parts.join(CRLF);
 }
 
+// Fetch the photo, transcode to a small square JPEG via sharp, base64-encode.
+// Inputs of any size/format (WebP/PNG/JPEG, up to a few MB) → ~20-40KB JPEG output.
+// Sharp is already a Next.js peer dep.
 async function fetchPhotoBase64(url: string): Promise<string | null> {
   if (!url) return null;
   try {
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) return null;
-    const buf = Buffer.from(await res.arrayBuffer());
-    if (buf.length > 100 * 1024) return null;
-    return buf.toString('base64');
+    const inputBuf = Buffer.from(await res.arrayBuffer());
+    if (inputBuf.length > 10 * 1024 * 1024) return null; // sanity cap: 10MB raw input
+    const sharp = (await import('sharp')).default;
+    const jpeg = await sharp(inputBuf)
+      .resize(256, 256, { fit: 'cover', position: 'attention' })
+      .jpeg({ quality: 80, mozjpeg: true })
+      .toBuffer();
+    return jpeg.toString('base64');
   } catch {
     return null;
   }
@@ -78,24 +86,9 @@ export async function buildVCard(card: Card): Promise<string> {
     lines.push(`URL:${url}`);
   }
 
-  if (card.socials.linkedin) {
-    lines.push(`X-SOCIALPROFILE;TYPE=linkedin:https://linkedin.com/in/${card.socials.linkedin}`);
-  }
-  if (card.socials.github) {
-    lines.push(`X-SOCIALPROFILE;TYPE=github:https://github.com/${card.socials.github}`);
-  }
-  if (card.socials.instagram) {
-    lines.push(`X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/${card.socials.instagram}`);
-  }
-  if (card.socials.x) {
-    lines.push(`X-SOCIALPROFILE;TYPE=twitter:https://x.com/${card.socials.x}`);
-  }
-  if (card.socials.youtube) {
-    lines.push(`X-SOCIALPROFILE;TYPE=youtube:https://youtube.com/@${card.socials.youtube}`);
-  }
-  if (card.socials.tiktok) {
-    lines.push(`X-SOCIALPROFILE;TYPE=tiktok:https://tiktok.com/@${card.socials.tiktok}`);
-  }
+  // Social profiles intentionally OMITTED from .vcf — kept on the public card page only,
+  // because iPhone Contacts clutters with the "social profiles" tab and most recipients
+  // don't want six rows of brand-handle metadata in their address book.
 
   lines.push(`NOTE:${escape(card.en.name)} · ${escape(card.ar.name)} — ${escape(card.en.title)}`);
   lines.push('END:VCARD');
