@@ -22,7 +22,23 @@ export async function POST(req: Request) {
   if (file.size > MAX_BYTES) return NextResponse.json({ error: 'file too large (5MB max)' }, { status: 400 });
   if (!slug) return NextResponse.json({ error: 'slug required' }, { status: 400 });
 
-  const buf = Buffer.from(await file.arrayBuffer());
-  const url = await uploadCardPhoto(slug, buf, file.type);
-  return NextResponse.json({ url });
+  const inputBuf = Buffer.from(await file.arrayBuffer());
+
+  // Server-side transcode: any input (JPEG/PNG/WebP up to 5MB) → 1024px square
+  // JPEG at q85, EXIF stripped. Typical output: 100-250KB. Next/Image's loader
+  // resizes down on demand for cards (96/256/384) and OG (1200x630).
+  let jpegBuf: Buffer;
+  try {
+    const sharp = (await import('sharp')).default;
+    jpegBuf = await sharp(inputBuf)
+      .rotate()                                          // honor EXIF orientation BEFORE stripping
+      .resize(1024, 1024, { fit: 'cover', position: 'attention' })
+      .jpeg({ quality: 85, mozjpeg: true })
+      .toBuffer();
+  } catch {
+    return NextResponse.json({ error: 'image could not be processed' }, { status: 400 });
+  }
+
+  const url = await uploadCardPhoto(slug, jpegBuf, 'image/jpeg');
+  return NextResponse.json({ url, bytes: jpegBuf.length });
 }
