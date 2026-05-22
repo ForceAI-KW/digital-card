@@ -103,7 +103,7 @@ export function ForceBrand({ card, url }: Props) {
         <div className="w-full flex flex-col gap-3 mb-10">
           {tel && (
             <ActionButton variant="secondary" template="force"
-              label={`${t('CALL', locale)} ${locale === 'ar' ? toArabicDigits(card.contact.phoneDisplay ?? tel) : (card.contact.phoneDisplay ?? tel)}`}
+              label={`${t('CALL', locale)} ${locale === 'ar' ? toArabicDigits(tel.replace(/\D/g, '').slice(-8)) : (card.contact.phoneDisplay ?? tel)}`}
               icon={<PhoneIcon color={ORANGE} />}
               href={`tel:${tel}`} />
           )}

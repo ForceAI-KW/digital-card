@@ -93,7 +93,7 @@ export function NardoLux({ card, url }: Props) {
             <ActionButton
               variant="secondary"
               template="lux"
-              label={`${t('CALL', locale)} ${locale === 'ar' ? toArabicDigits(card.contact.phoneDisplay ?? tel) : (card.contact.phoneDisplay ?? tel)}`}
+              label={`${t('CALL', locale)} ${locale === 'ar' ? toArabicDigits(tel.replace(/\D/g, '').slice(-8)) : (card.contact.phoneDisplay ?? tel)}`}
               icon={<PhoneIcon />}
               href={`tel:${tel}`}
             />
