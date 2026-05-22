@@ -15,9 +15,16 @@ const ORANGE = '#FF7700';
 const CREAM  = '#ECECEC';
 const WINE   = '#2D1418';
 
-const BRAND_LABEL: Record<string, { wordmark: string; footerOrg: string }> = {
-  'force-ai':    { wordmark: 'FORCE AI',    footerOrg: 'Force AI · Kuwait' },
-  'force-media': { wordmark: 'FORCE MEDIA', footerOrg: 'Force Media · Kuwait' },
+type BrandStrings = { wordmark: string; footerOrg: string };
+const BRAND_LABEL: Record<string, { en: BrandStrings; ar: BrandStrings }> = {
+  'force-ai': {
+    en: { wordmark: 'FORCE AI',                footerOrg: 'Force AI · Kuwait' },
+    ar: { wordmark: 'فورس للذكاء الاصطناعي', footerOrg: 'فورس للذكاء الاصطناعي · الكويت' },
+  },
+  'force-media': {
+    en: { wordmark: 'FORCE MEDIA',  footerOrg: 'Force Media · Kuwait' },
+    ar: { wordmark: 'فورس ميديا',   footerOrg: 'فورس ميديا · الكويت' },
+  },
 };
 
 type Props = { card: Card; url: string };
@@ -26,7 +33,7 @@ export function ForceBrand({ card, url }: Props) {
   if (!card.brand) throw new Error(`ForceBrand template requires card.brand; slug=${card.slug}`);
   const { locale } = useLocale();
   const c = card[locale];
-  const brand = BRAND_LABEL[card.brand];
+  const brand = BRAND_LABEL[card.brand][locale];
   const tel = card.contact.phone ?? '';
   const wa  = card.contact.whatsapp ?? card.contact.phone ?? '';
   const email = card.contact.emails[0] ?? '';
@@ -40,7 +47,14 @@ export function ForceBrand({ card, url }: Props) {
       <main className="max-w-[420px] mx-auto px-4 pt-24 pb-16 flex flex-col items-center">
         <div className="flex flex-col items-center gap-1 mb-8">
           <FalconF size={28} color={ORANGE} />
-          <span className="text-[12px] font-semibold uppercase tracking-wider-15" style={{ color: ORANGE }}>
+          <span
+            className={
+              locale === 'ar'
+                ? 'text-[16px] font-semibold text-center'
+                : 'text-[12px] font-semibold uppercase tracking-wider-15'
+            }
+            style={{ color: ORANGE }}
+          >
             {brand.wordmark}
           </span>
         </div>
