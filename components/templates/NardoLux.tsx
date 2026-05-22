@@ -52,10 +52,19 @@ export function NardoLux({ card, url }: Props) {
           {c.name}
         </h1>
 
-        {/* Subtitle — Nardo grey, 0.12em letter-spacing inline to bypass any missing Tailwind token */}
+        {/* Subtitle — Nardo grey. Arabic gets a larger non-uppercase render
+            because Arabic has no case + letter-spacing severs OpenType joining */}
         <p
-          className="font-medium text-[12px] uppercase mb-8 text-center"
-          style={{ color: NARDO, letterSpacing: '0.12em' }}
+          className={
+            locale === 'ar'
+              ? 'font-medium text-[18px] mb-8 text-center'
+              : 'font-medium text-[12px] uppercase mb-8 text-center'
+          }
+          style={
+            locale === 'ar'
+              ? { color: NARDO }
+              : { color: NARDO, letterSpacing: '0.12em' }
+          }
         >
           {c.title}
         </p>

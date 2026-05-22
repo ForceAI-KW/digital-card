@@ -52,7 +52,19 @@ export function ForceBrand({ card, url }: Props) {
         <h1 className="font-sans font-bold text-[36px] leading-[1.05] tracking-[-0.01em] mb-2 text-center" style={{ color: CREAM }}>
           {c.name}
         </h1>
-        <p className="font-medium text-[14px] uppercase mb-8 text-center" style={{ color: ORANGE, letterSpacing: '0.1em' }}>
+        {/* Subtitle — Arabic gets larger non-uppercase to preserve script joining */}
+        <p
+          className={
+            locale === 'ar'
+              ? 'font-medium text-[20px] mb-8 text-center'
+              : 'font-medium text-[14px] uppercase mb-8 text-center'
+          }
+          style={
+            locale === 'ar'
+              ? { color: ORANGE }
+              : { color: ORANGE, letterSpacing: '0.1em' }
+          }
+        >
           {c.title}
         </p>
 
