@@ -44,13 +44,18 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Locale-aware font: Arabic gets Tharwat Emara Ruqaa, English gets Gotham */
+/* Locale-aware font: Arabic gets Tharwat Emara Ruqaa, English gets Inter+Bodoni */
 html[lang="ar"] body,
 html[lang="ar"] input,
 html[lang="ar"] button,
 html[lang="ar"] select,
 html[lang="ar"] textarea {
   font-family: var(--font-arabic), system-ui, sans-serif;
+  /* Tharwat Ruqaa is ornamental; tracking on words (not letters — that severs joining)
+     gives breathing room. Bump body size too — Ruqaa reads small at default 16px. */
+  word-spacing: 0.18em;
+  font-size: 18px;
+  line-height: 1.55;
 }
 
 @layer base {

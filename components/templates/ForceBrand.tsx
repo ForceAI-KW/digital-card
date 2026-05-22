@@ -50,7 +50,7 @@ export function ForceBrand({ card, url }: Props) {
           <span
             className={
               locale === 'ar'
-                ? 'text-[16px] font-semibold text-center'
+                ? 'text-[22px] font-semibold text-center leading-[1.4]'
                 : 'text-[12px] font-semibold uppercase tracking-wider-15'
             }
             style={{ color: ORANGE }}
@@ -63,14 +63,21 @@ export function ForceBrand({ card, url }: Props) {
           <Photo src={card.photoUrl} alt={c.name} size={96} rounded="rounded" />
         </div>
 
-        <h1 className="font-sans font-bold text-[36px] leading-[1.05] tracking-[-0.01em] mb-2 text-center" style={{ color: CREAM }}>
+        <h1
+          className={
+            locale === 'ar'
+              ? 'font-bold text-[48px] leading-[1.25] mb-3 text-center'
+              : 'font-sans font-bold text-[36px] leading-[1.05] tracking-[-0.01em] mb-2 text-center'
+          }
+          style={{ color: CREAM }}
+        >
           {c.name}
         </h1>
         {/* Subtitle — Arabic gets larger non-uppercase to preserve script joining */}
         <p
           className={
             locale === 'ar'
-              ? 'font-medium text-[20px] mb-8 text-center'
+              ? 'font-medium text-[26px] leading-[1.5] mb-10 text-center'
               : 'font-medium text-[14px] uppercase mb-8 text-center'
           }
           style={

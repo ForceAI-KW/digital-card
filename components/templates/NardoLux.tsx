@@ -47,12 +47,11 @@ export function NardoLux({ card, url }: Props) {
           <Photo src={card.photoUrl} alt={c.name} size={96} rounded="full" />
         </div>
 
-        {/* Name — Bodoni Moda italic serif (EN) / Tharwat Emara Ruqaa (AR via lang selector).
-            Arabic Ruqaa is denser → use a slightly smaller px size for visual parity. */}
+        {/* Name — Bodoni Moda italic serif (EN) / Tharwat Emara Ruqaa (AR via lang selector). */}
         <h1
           className={
             locale === 'ar'
-              ? 'font-bold text-[44px] leading-[1.15] text-ink mb-2 text-center'
+              ? 'font-bold text-[56px] leading-[1.25] text-ink mb-3 text-center'
               : 'font-serif italic text-[48px] leading-[1.05] tracking-[-0.02em] text-ink mb-2 text-center'
           }
         >
@@ -64,7 +63,7 @@ export function NardoLux({ card, url }: Props) {
         <p
           className={
             locale === 'ar'
-              ? 'font-medium text-[18px] mb-8 text-center'
+              ? 'font-medium text-[24px] leading-[1.5] mb-10 text-center'
               : 'font-medium text-[12px] uppercase mb-8 text-center'
           }
           style={
