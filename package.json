@@ -67,6 +67,8 @@
     "@vercel/blob": {
       "undici": "^6.27.0"
     },
-    "deepmerge-ts": "^8.0.0"
+    "deepmerge-ts": "^8.0.0",
+    "fast-uri": "^4.1.4",
+    "mysql2": "^3.24.3"
   }
 }
